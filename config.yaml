@@ -1,0 +1,6 @@
+root_dir: '/media/pgsalome/B731-E206/HD1/nsclc/nsclc_unsorted/test3'
+labels_level1: ["ANP", "HNC", "LUNG", "SHLDR", "LEG", "WB", "KNEE"]
+labels_level2: ["CB", "PET", "CT", "CCT", "MIP"]
+view: 'scan'
+nii_convert: true
+nr_images: 500
