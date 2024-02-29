@@ -622,6 +622,272 @@ def get_view_order(nifti_image_path):
     # No need to sort based on dimensions since we are focusing on orientation order and voxel sizes for logic
     return dim_info
 
+def get_slice(nifti_path,image_data, nifty_or, orientation, desired_orientation):
+    selected_slice = None
+    rgb = image_data.ndim == 4
+    def select_slice(slice_expression):
+        if rgb:
+            return slice_expression[:, :]
+        else:
+            return slice_expression
+    # rot = check_for_rotation(nifti_path)
+    # if rot:
+    #     print("rotation")
+    if nifty_or == "LPI":
+        if desired_orientation == "COR":
+            if orientation == "SAG":
+                selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                ind = 0
+            elif orientation == "TRA":
+                selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                ind = 1
+            else:
+                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                ind = 2
+        elif desired_orientation == "TRA":
+            if orientation == "SAG":
+                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                ind = 2
+            elif orientation == "TRA":
+                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                ind = 2
+            else:
+                selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                ind = 1
+        elif desired_orientation == "SAG":
+            if orientation == "SAG":
+                selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                ind = 1
+            elif orientation == "TRA":
+                selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                ind = 0
+            else:
+                selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                ind = 0
+    elif nifty_or == "LAI" :
+        if desired_orientation == "COR":
+            if orientation == "SAG":
+                selected_slice = select_slice(image_data[image_data.shape[0]//2, :,: ])
+                ind = 0
+            elif orientation == "TRA":
+                selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                ind = 1
+            else:
+                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                ind = 2
+        elif desired_orientation == "TRA":
+            if orientation == "SAG":
+                selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                ind = 1
+            elif orientation == "TRA":
+                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                ind = 2
+            else:
+                selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                ind = 1
+        elif desired_orientation == "SAG":
+            if orientation == "SAG":
+                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                ind = 2
+            elif orientation == "TRA":
+                selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                ind = 0
+            else:
+                selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                ind = 0
+    elif nifty_or == "RPI":
+        if desired_orientation == "COR":
+            if orientation == "SAG":
+                selected_slice = select_slice(image_data[:, image_data.shape[1]//2,: ])
+                ind = 1
+            elif orientation == "TRA":
+                selected_slice = select_slice(image_data[ :,image_data.shape[1]//2, :])
+                ind = 1
+            else:
+                selected_slice = select_slice(image_data[ :,image_data.shape[1]//2, :])
+                ind = 1
+        elif desired_orientation == "TRA":
+            if orientation == "SAG":
+                selected_slice = select_slice(image_data[ image_data.shape[0]//2, :,:])
+                ind = 0
+            elif orientation == "TRA":
+                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                ind = 2
+            else:
+                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                ind = 2
+        elif desired_orientation == "SAG":
+            if orientation == "SAG":
+                selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                ind = 0
+            elif orientation == "TRA":
+                selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                ind = 1
+            else:
+                selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                ind = 0
+                
+    elif nifty_or == "RAI":
+         if desired_orientation == "COR":
+             if orientation == "SAG":
+                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2,: ])
+                 ind = 1
+             elif orientation == "TRA":
+                 selected_slice = select_slice(image_data[ :,image_data.shape[1]//2, :])
+                 ind = 1
+             else:
+                 selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                 ind = 2
+         elif desired_orientation == "TRA":
+             if orientation == "SAG":
+                 selected_slice =select_slice( image_data[:, :, image_data.shape[2]//2])
+                 ind = 2
+             elif orientation == "TRA":
+                 selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                 ind = 2
+             else:
+                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                 ind = 1
+         elif desired_orientation == "SAG":
+             if orientation == "SAG":
+                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                 ind = 0
+             elif orientation == "TRA":
+                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                 ind = 0
+             else:
+                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                 ind = 0
+    elif nifty_or == "RAS":
+        if desired_orientation == "COR":
+            if orientation == "SAG":
+                selected_slice = select_slice(image_data[:, image_data.shape[1]//2,: ])
+                ind = 1
+            elif orientation == "TRA":
+                selected_slice = select_slice(image_data[ :,image_data.shape[1]//2, :])
+                ind = 1
+            else:
+                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                ind = 2
+        elif desired_orientation == "TRA":
+            if orientation == "SAG":
+                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                ind = 2
+            elif orientation == "TRA":
+                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                ind = 2
+            else:
+                selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                ind = 1
+        elif desired_orientation == "SAG":
+            if orientation == "SAG":
+                selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                ind = 0
+            elif orientation == "TRA":
+                selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                ind = 1
+            else:
+                selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                ind = 0
+    elif nifty_or == "RPS":
+         if desired_orientation == "COR":
+             if orientation == "SAG":
+                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2,: ])
+                 ind = 1
+             elif orientation == "TRA":
+                 selected_slice = select_slice(image_data[ :,image_data.shape[1]//2, :])
+                 ind = 1
+             else:
+                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                 ind = 1
+         elif desired_orientation == "TRA":
+             if orientation == "SAG":
+                 selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                 ind = 2
+             elif orientation == "TRA":
+                 selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                 ind = 2
+             else:
+                 selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                 ind = 0
+         elif desired_orientation == "SAG":
+             if orientation == "SAG":
+                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                 ind = 0
+             elif orientation == "TRA":
+                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                 ind = 1
+             else:
+                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                 ind = 0
+    elif nifty_or == "LAS":
+        
+        if desired_orientation == "COR":
+            if orientation == "SAG":
+                selected_slice = select_slice(image_data[:, image_data.shape[1]//2,: ])
+                ind = 1
+            elif orientation == "TRA":
+                selected_slice = select_slice(image_data[ :,image_data.shape[1]//2, :])
+                ind = 1
+            else:
+                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                ind = 2
+        elif desired_orientation == "TRA":
+            if orientation == "SAG":
+                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                ind = 2
+            elif orientation == "TRA":
+                selected_slice =select_slice( image_data[:, :, image_data.shape[2]//2])
+                ind = 2
+            else:
+                selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                ind = 1
+        elif desired_orientation == "SAG":
+            if orientation == "SAG":
+                selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                ind = 0
+            elif orientation == "TRA":
+                selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                ind = 1
+            else:
+                selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                ind = 0
+    else:
+         if desired_orientation == "COR":
+             if orientation == "SAG":
+                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2,: ])
+                 ind = 1
+             elif orientation == "TRA":
+                 selected_slice = select_slice(image_data[ :,image_data.shape[1]//2, :])
+                 ind = 1
+             else:
+                 selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                 ind = 2
+         elif desired_orientation == "TRA":
+             if orientation == "SAG":
+                 selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                 ind = 2
+             elif orientation == "TRA":
+                 selected_slice =select_slice( image_data[:, :, image_data.shape[2]//2])
+                 ind = 2
+             else:
+                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                 ind = 1
+         elif desired_orientation == "SAG":
+             if orientation == "SAG":
+                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                 ind = 0
+             elif orientation == "TRA":
+                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                 ind = 1
+             else:
+                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                 ind = 0
+                 
+
+        
+    return selected_slice, ind
+
 
 def dicom_to_png_by_orientation(root_dir_or_dicomfolders, output_dir, desired_orientation="COR",target_size = (224, 224), plot_rgb=False):
     """
@@ -645,23 +911,11 @@ def dicom_to_png_by_orientation(root_dir_or_dicomfolders, output_dir, desired_or
     else:
         dicom_folders = root_dir_or_dicomfolders
     for dicom_folder in dicom_folders:
-        check_4d = False
-        
-        print(dicom_folder)
+       
         modality = dicom_folder.split('/')[-2]
-                    
-        ###initilase###
-        rgb = False
-        ## define the output folder
-        path_parts = dicom_folder.split('/')
-        output_folder = output_dir + '/' + '/'.join(path_parts[-4:-1])
-        output_filename = '_'.join(path_parts[-6:])
-        if not os.path.exists(output_folder):
-            os.makedirs(output_folder, exist_ok=True)
+
+
         orientation = dicom_folder.split("/")[-4]
-        if os.path.isfile(output_folder + '/' + output_filename +'.png'):
-            continue
-        
         # Adjust for additional orientations like '3DCOR', '3DSAG', etc.
         if '3D' in orientation or 'NA' in orientation:
             orientation = "TRA"
@@ -674,26 +928,40 @@ def dicom_to_png_by_orientation(root_dir_or_dicomfolders, output_dir, desired_or
         ##  load
         nii_d = glob.glob(dicom_folder + '.nii.gz')
         if not nii_d:
-            continue
             convert_image(dicom_folder)
             nii_d = glob.glob(dicom_folder + '.nii.gz')
             if not nii_d:
                 print("no nifti for dicom_folder"+dicom_folder)  
                 continue
         try:
+            nifty_or = get_nifti_orientation(nii_d[0])
+            print(nifty_or)
+        except:
+            nifty_or = "NS"
+             
+        ## define the output folder
+        path_parts = dicom_folder.split('/')
+        output_folder = output_dir + '/' + nifty_or + '/' + '/'.join(path_parts[-4:-1])
+        output_filename = '_'.join(path_parts[-6:])
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder, exist_ok=True)
+          
+        if os.path.isfile(output_folder + '/' + output_filename +'.png'):
+            continue        
+                
+        try:
             img = nib.load(nii_d[0])
             image_data_init = img.get_fdata()
         except:
-            try:
-                if is_rgb(nii_d[0])[0]:
-                    pil_img = get_rgb_image(nii_d[0], orientation, desired_orientation="COR",plot=False)
-                    pil_img.save(output_folder + '/' + output_filename + '.png')
-                    continue
-            except:
+            if is_rgb(nii_d[0])[0]:
+        
+                pil_img,resized_slice = get_rgb_image(nii_d[0],orientation, desired_orientation,target_size)
+                pil_img.save(output_folder + '/' + output_filename +'.png')
+                continue
+   
+            else:
                 print("error"+dicom_folder)
-        if not nii_d:
-            convert_image(dicom_folder)
-            if not nii_d:
+                failed.append(dicom_folder)
                 continue
 
         pixel_spacing,slice_thickness =  get_pixel_spacing_and_slice_thickness_from_nifti(nii_d[0])
@@ -701,14 +969,8 @@ def dicom_to_png_by_orientation(root_dir_or_dicomfolders, output_dir, desired_or
             ds = pydicom.read_file(glob.glob(dicom_folder+'/*.dcm')[0])
             pixel_spacing,slice_thickness =  get_pixel_spacing_and_slice_thickness(ds)
             
-          
-
         selected_slice = None
-        try:
-            nifty_or = get_nifti_orientation(nii_d[0])
-            print(nifty_or)
-        except:
-            nifty_or = "NS"
+        
         
         if len(image_data_init.shape) > 3:
             check_4d = True
@@ -728,92 +990,41 @@ def dicom_to_png_by_orientation(root_dir_or_dicomfolders, output_dir, desired_or
                     image_data = image_data_init[:,:,:,c]
                 except:
                     print("error"+dicom_folder)
-            if nifty_or == "neurological":
-            
-                 # Selecting the appropriate slice based on the desired orientation
-                 if desired_orientation == "COR":
-                     if orientation == "SAG":
-                         selected_slice = image_data[image_data.shape[0]//2,:,:]
-                     elif orientation == "TRA":
-                         selected_slice = image_data[:,image_data.shape[1]//2,:]
-                     else:
-                         selected_slice = image_data[:,:,image_data.shape[2]//2]
-                 elif desired_orientation == "TRA":
-                     if orientation == "SAG":
-                         selected_slice = image_data[:,image_data.shape[1]//2,:]
-                     elif orientation == "TRA":
-                         selected_slice = image_data[:,:,image_data.shape[2]//2]
-                     else:
-                         selected_slice = image_data[:,image_data.shape[1]//2,:]
-                 elif desired_orientation == "SAG":
-                     if orientation == "SAG":
-                         selected_slice = image_data[:,:,image_data.shape[2]//2]
-                     elif orientation == "TRA" :
-                         selected_slice = image_data[image_data.shape[0]//2,:,:]
-                     else:
-                         selected_slice = image_data[image_data.shape[0]//2,:,:]
-            else:
-                 if desired_orientation == "COR":
-                     if orientation == "SAG":
-                         selected_slice = image_data[image_data.shape[0]//2, :,: ]
-                     elif orientation == "TRA":
-                         selected_slice = image_data[:,image_data.shape[1]//2,:]
-                     else:
-                         selected_slice = image_data[:,:,image_data.shape[2]//2]
-                         
-                 elif desired_orientation == "TRA":
-                     if orientation == "SAG":
-                         selected_slice = image_data[:,image_data.shape[1]//2,:]        
-                     elif orientation == "TRA":
-                         selected_slice = image_data[:,image_data.shape[1]//2,:]
-                     else:
-                         selected_slice = image_data[:,image_data.shape[1]//2,:]          
-                 elif desired_orientation == "SAG":
-                     if orientation == "SAG":
-                         selected_slice = image_data[:,:,image_data.shape[2]//2]         
-                     elif orientation == "TRA":
-                         selected_slice = image_data[image_data.shape[0]//2,:,:]
-                     else:
-                         selected_slice = image_data[image_data.shape[0]//2,:,:]
-                 
-            if "CT" not in modality and "PT" not in modality:
-                selected_slice[selected_slice<0] = 0
-                 
-     
-            # # Selecting the appropriate slice based on the desired orientation
-            # if desired_orientation == "COR":
-            #     if orientation == "SAG":
-            #         selected_slice = image_data[image_data.shape[0]//2,:]
-            #     elif orientation == "TRA":
-            #         selected_slice = image_data[:,image_data.shape[1]//2,:]
-            #     else:
-            #         selected_slice = image_data[:,:,image_data.shape[2]//2]
-            # elif desired_orientation == "TRA":
-            #     if orientation == "SAG":
-            #         selected_slice = image_data[:,image_data.shape[1]//2,:]
-            #     elif orientation == "TRA":
-            #         selected_slice = image_data[:,:,image_data.shape[2]//2]
-            #     else:
-            #         selected_slice = image_data[:,image_data.shape[1]//2,:]
-            # elif desired_orientation == "SAG":
-            #     if orientation == "SAG":
-            #         selected_slice = image_data[:,:,image_data.shape[2]//2]
-            #     elif orientation == "TRA" :
-            #         selected_slice = image_data[image_data.shape[0]//2,:,:]
-            #     else:
-            #         selected_slice = image_data[image_data.shape[0]//2,:,:]
-    
+            selected_slice, ind = get_slice(nii_d[0],image_data, nifty_or, orientation, desired_orientation)
+         
             # Check if selected_slice is None or not 2D
             if selected_slice is None or len(selected_slice.shape) != 2:
                 print(f"No valid slice selected for folder: {dicom_folder}")
                 failed.append(dicom_folder)
                 continue
-        
-            # Correcting the aspect ratio
-            if orientation != desired_orientation:
-                selected_slice = correct_aspect(selected_slice, pixel_spacing, slice_thickness)
-        
-            # Resizing the selected slice to a fixed size (128x128 pixels)
+            x,y,z = image_data.shape
+            if "CT" not in modality and "PT" not in modality:
+                selected_slice[selected_slice<0] = 0  
+            # if desired_orientation != orientation:
+            if ind == 2:
+                if x>y:
+                    aspect_ratio = pixel_spacing[1] / pixel_spacing[0]
+                else:
+                    aspect_ratio = pixel_spacing[0] / pixel_spacing[1]
+            elif ind == 0:
+                if y >z:
+                    aspect_ratio = slice_thickness / pixel_spacing[1]
+                else:
+                    aspect_ratio = pixel_spacing[1] / slice_thickness 
+            else:
+                if z > x:
+                    aspect_ratio =  pixel_spacing[0] / slice_thickness
+                else:
+                    aspect_ratio =   slice_thickness / pixel_spacing[0] 
+                
+            
+            if min(selected_slice.shape) == selected_slice.shape[1]:
+                selected_slice = zoom(selected_slice, (1,aspect_ratio), order=3) 
+               
+            else:
+                selected_slice = zoom(selected_slice, (aspect_ratio,1), order=3)                 
+                            
+                
             try:
                 resized_slice = resize_or_pad_image(selected_slice, target_size,
                                                     get_background_value_from_3d_array(image_data, num_slices=3))
@@ -827,9 +1038,10 @@ def dicom_to_png_by_orientation(root_dir_or_dicomfolders, output_dir, desired_or
                 pil_img = Image.fromarray(resized_slice.astype(np.uint8), mode='L').rotate(180)
             if orientation ==  desired_orientation or orientation == "TRA" and desired_orientation == "COR" or orientation == "TRA" and desired_orientation == "SAG" :
                 pil_img = Image.fromarray(resized_slice.astype(np.uint8), mode='L').rotate(90)
-            if orientation == "COR" and desired_orientation == "TRA" :
+            if orientation == "COR" and desired_orientation == "TRA" and nifty_or != "LPI":
                pil_img = Image.fromarray(resized_slice.astype(np.uint8), mode='L').rotate(-90)
-            
+            # if orientation == "SAG" and desired_orientation == "COR" and nifty_or == "LPI" :
+            #     pil_img = Image.fromarray(resized_slice.astype(np.uint8), mode='L').rotate(90)            
             if modality == "PT" and plot_rgb:
     
             # Apply the jet colormap
@@ -840,93 +1052,25 @@ def dicom_to_png_by_orientation(root_dir_or_dicomfolders, output_dir, desired_or
             if channels !=1:
                 pil_img.save(output_folder + '/' + output_filename +'_'+str(c)+ '.png')
             else:
+                # print(output_folder + '/' + output_filename +'.png')
                 pil_img.save(output_folder + '/' + output_filename +'.png')
             
     return is_4d, failed
 
 
 
-def get_slice(nifti_path,image_data, nifty_or, orientation, desired_orientation):
-    selected_slice = None
-    print(nifty_or)
-    # rot = check_for_rotation(nifti_path)
-    # if rot:
-    #     print("rotation")
-    if nifty_or == "LPI":
-        if desired_orientation == "COR":
-            if orientation == "SAG":
-                selected_slice = image_data[image_data.shape[0]//2, :, :]
-            elif orientation == "TRA":
-                selected_slice = image_data[:, image_data.shape[1]//2, :]
-            else:
-                selected_slice = image_data[:, :, image_data.shape[2]//2]
-        elif desired_orientation == "TRA":
-            if orientation == "SAG":
-                selected_slice = image_data[:, :, image_data.shape[2]//2]
-            elif orientation == "TRA":
-                selected_slice = image_data[:, :, image_data.shape[2]//2]
-            else:
-                selected_slice = image_data[:, image_data.shape[1]//2, :]
-        elif desired_orientation == "SAG":
-            if orientation == "SAG":
-                selected_slice = image_data[:, image_data.shape[1]//2, :]
-            elif orientation == "TRA":
-                selected_slice = image_data[image_data.shape[0]//2, :, :]
-            else:
-                selected_slice = image_data[image_data.shape[0]//2, :, :]
-    elif nifty_or == "LAI" :
-        if desired_orientation == "COR":
-            if orientation == "SAG":
-                selected_slice = image_data[image_data.shape[0]//2, :,: ]
-            elif orientation == "TRA":
-                selected_slice = image_data[:, image_data.shape[1]//2, :]
-            else:
-                selected_slice = image_data[:, :, image_data.shape[2]//2]
-        elif desired_orientation == "TRA":
-            if orientation == "SAG":
-                selected_slice = image_data[:, image_data.shape[1]//2, :]
-            elif orientation == "TRA":
-                selected_slice = image_data[:, :, image_data.shape[2]//2]
-            else:
-                selected_slice = image_data[:, image_data.shape[1]//2, :]
-        elif desired_orientation == "SAG":
-            if orientation == "SAG":
-                selected_slice = image_data[:, :, image_data.shape[2]//2]
-            elif orientation == "TRA":
-                selected_slice = image_data[image_data.shape[0]//2, :, :]
-            else:
-                selected_slice = image_data[image_data.shape[0]//2, :, :]
-    elif nifty_or == "RPI":
-        if desired_orientation == "COR":
-            if orientation == "SAG":
-                selected_slice = image_data[:, image_data.shape[1]//2,: ]
-            elif orientation == "TRA":
-                selected_slice = image_data[ image_data.shape[0]//2,:, :]
-            else:
-                selected_slice = image_data[:, :, image_data.shape[2]//2]
-        elif desired_orientation == "TRA":
-            if orientation == "SAG":
-                selected_slice = image_data[:, :, image_data.shape[2]//2]
-            elif orientation == "TRA":
-                selected_slice = image_data[:, :, image_data.shape[2]//2]
-            else:
-                selected_slice = image_data[:, image_data.shape[1]//2, :]
-        elif desired_orientation == "SAG":
-            if orientation == "SAG":
-                selected_slice = image_data[image_data.shape[0]//2, :, :]
-            elif orientation == "TRA":
-                selected_slice = image_data[:, image_data.shape[1]//2, :]
-            else:
-                selected_slice = image_data[image_data.shape[0]//2, :, :]
-    return selected_slice
 
-
-def select_nifti_slice(d, rootdir, desired_orientation,orientation_overwrite = None, plot = False):
-    try:
-        dicom_folder = get_dicom_from_png(d, rootdir)[0]
-    except:
-        dcm_folder = get_dicom_from_png(remove_last_number(png),rootdir)[0]
+def select_nifti_slice(d, rootdir, desired_orientation,orientation_overwrite = None,target_size=(224,224),plot=True):
+    if "png" in d:
+        try:
+            dicom_folder = get_dicom_from_png(d, rootdir)[0]
+        except:
+            dicom_folder = get_dicom_from_png(remove_last_number(d),rootdir)[0]
+    else:
+        dicom_folder = d
     orientation = dicom_folder.split("/")[-4]
+    
+    m = "L"
     if '3D' in orientation or 'NA' in orientation:
         orientation = "TRA"
     elif 'SAG' in orientation:
@@ -939,28 +1083,87 @@ def select_nifti_slice(d, rootdir, desired_orientation,orientation_overwrite = N
         orientation = orientation_overwrite
     nii_d = glob.glob(dicom_folder + '.nii.gz')
     img = nib.load(nii_d[0])
-    image_data_init = img.get_fdata()
-    if len(image_data_init.shape) > 3:
-        image_data_init = image_data_init[:,:,:,-1]
     nifty_or = get_nifti_orientation(nii_d[0])
+    modality = dicom_folder.split('/')[-2]
+    
     print(nifty_or)
-    image_data = image_data_init
-    selected_slice = get_slice(nii_d[0],image_data, nifty_or, orientation, desired_orientation)
-    pixel_spacing,slice_thickness =  get_pixel_spacing_and_slice_thickness_from_nifti(nii_d[0])
-    if pixel_spacing is None or len(pixel_spacing) == 0 or slice_thickness is None:
-        ds = pydicom.read_file(glob.glob(dicom_folder+'/*.dcm')[0])
-        pixel_spacing,slice_thickness =  get_pixel_spacing_and_slice_thickness(ds)
+    try:
+        image_data_init = img.get_fdata()
+        if len(image_data_init.shape) > 3:
+            image_data_init = image_data_init[:,:,:,-1]
+        image_data = image_data_init
+        selected_slice,ind = get_slice(nii_d,image_data, nifty_or, orientation, desired_orientation)
+    except:
+     
+        pil_img,resized_slice = get_rgb_image(nii_d[0], orientation,desired_orientation,target_size)
+        m = 'RGB'
         
-    if orientation != desired_orientation:
-        selected_slice = correct_aspect(selected_slice, pixel_spacing, slice_thickness)    
+    if m != 'RGB':    
+        x,y,z = image_data.shape
+        ds = pydicom.read_file(glob.glob(dicom_folder+'/*.dcm')[0])
+        
+        pixel_spacing_d,slice_thickness_d =  get_pixel_spacing_and_slice_thickness(ds)   
+        pixel_spacing ,slice_thickness =  get_pixel_spacing_and_slice_thickness_from_nifti(nii_d[0])
+        # if desired_orientation != orientation:
+        if ind == 2:
+            if x>y:
+                aspect_ratio = pixel_spacing[1] / pixel_spacing[0]
+            else:
+                aspect_ratio = pixel_spacing[0] / pixel_spacing[1]
+        elif ind == 0:
+            if y >z:
+                aspect_ratio = slice_thickness / pixel_spacing[1]
+            else:
+                aspect_ratio = pixel_spacing[1] / slice_thickness 
+        else:
+            if z > x:
+                aspect_ratio =  pixel_spacing[0] / slice_thickness
+            else:
+                aspect_ratio =   slice_thickness / pixel_spacing[0] 
+            
+        
+        if min(selected_slice.shape) == selected_slice.shape[1]:
+            selected_slice = zoom(selected_slice, (1,aspect_ratio), order=3) 
+           
+        else:
+            selected_slice = zoom(selected_slice, (aspect_ratio,1), order=3) 
+               
 
-    plt.imshow(selected_slice, cmap='gray')
-    plt.show()   
+        resized_slice = resize_or_pad_image(selected_slice, target_size,
+                                                 get_background_value_from_3d_array(image_data, num_slices=3))
 
-
-# Your existing function with modifications
-
-
+        resized_slice = np.interp(resized_slice, (resized_slice.min(), resized_slice.max()), (0, 255))
+        pil_img = Image.fromarray(resized_slice.astype(np.uint8), mode=m)
+    if orientation == "SAG" and desired_orientation == "COR" or orientation == "COR" and desired_orientation == "SAG" and nifty_or != "LPI" :
+        pil_img = pil_img.rotate(180)
+    if nifty_or != "RPI" and (orientation ==  desired_orientation) or (orientation == "TRA" and desired_orientation == "COR") or (orientation == "TRA" and desired_orientation == "SAG") :
+        pil_img = pil_img.rotate(90)
+    if orientation == "COR" and desired_orientation == "TRA" and nifty_or != "LPI" and nifty_or != "RPI":        
+        pil_img = pil_img.rotate(-90)
+  
+    if orientation == "COR" and desired_orientation == "SAG" and nifty_or == "LPI"  :  
+        pil_img = pil_img.rotate(90) 
+    if orientation == "COR" and desired_orientation == "SAG" and  nifty_or == "RPI" :  
+        pil_img = pil_img.rotate(-90) 
+    if (orientation == "COR" and desired_orientation == "TRA" and nifty_or == "RPI") or (orientation == "COR" and desired_orientation == "COR" and nifty_or == "RPI") :        
+        pil_img = pil_img.rotate(-180)
+    if orientation == "COR" and desired_orientation == "TRA" and  nifty_or == "LPI" :  
+        pil_img = pil_img.rotate(-90) 
+          
+    if modality == "PT" :
+    
+     # Apply the jet colormap
+        colormap_image = cm.jet(resized_slice / 255)  # Normalize the image to range [0, 1]
+        colormap_image = np.uint8(colormap_image * 255)  # Convert to 8-bit format
+        pil_img = Image.fromarray(colormap_image, mode='RGBA')
+    if plot:
+        plt.axis('off')
+        if m != "RGB":
+            plt.imshow(pil_img, cmap='gray') 
+    
+        else:
+            plt.imshow(pil_img)
+    return resized_slice
 
 def delete_from_png(png_dir,dataset_dir):
 
@@ -1025,177 +1228,6 @@ def get_orientation_from_sitk(nii_path):
     return orientation
 
 
-def get_rgb_image(nii_d, orientation,desired_orientation,target_size):
-    # Read the image using SimpleITK
-    img = sitk.ReadImage(nii_d)
-    
-    # Convert the image to a numpy array
-    image_data = sitk.GetArrayFromImage(img)
-    if len(image_data.shape) == 5:
-        image_data = image_data[0,:,:,:,:]
-    else:
-        image_data = image_data[:,:,:,:]
-    try:
-        nifty_or = get_nifti_orientation(nii_d)
-    except:
-        nifty_or = get_orientation_from_sitk(nii_d)       
-    
-    spacing = img.GetSpacing()  # Returns a tuple (x_spacing, y_spacing, z_spacing)
-    pixel_spacing = (spacing[0], spacing[1])  # Pixel spacing in x and y
-    slice_thickness = spacing[2]  # Slice thickness (z spacing)
-    
-    if nifty_or == "neurological":
-        if desired_orientation == "COR":
-            if orientation == "SAG":
-                selected_slice = image_data[image_data.shape[0]//2, :, :,:]
-            elif orientation == "TRA":
-                selected_slice = image_data[:, image_data.shape[1]//2, :,:]
-            else:
-                selected_slice = image_data[:, :, image_data.shape[2]//2,:]
-        elif desired_orientation == "TRA":
-            if orientation == "SAG":
-                selected_slice = image_data[:, :, image_data.shape[2]//2,:]
-            elif orientation == "TRA":
-                selected_slice = image_data[:, :, image_data.shape[2]//2,:]
-            else:
-                selected_slice = image_data[:, image_data.shape[1]//2, :,:]
-        elif desired_orientation == "SAG":
-            if orientation == "SAG":
-                selected_slice = image_data[:, image_data.shape[1]//2, :,:]
-            elif orientation == "TRA":
-                selected_slice = image_data[image_data.shape[0]//2, :, :,:]
-            else:
-                selected_slice = image_data[image_data.shape[0]//2, :, :,:]
-    else:
-        if desired_orientation == "COR":
-            if orientation == "SAG":
-                selected_slice = image_data[image_data.shape[0]//2, :,: ,:]
-            elif orientation == "TRA":
-                selected_slice = image_data[:, image_data.shape[1]//2, :,:]
-            else:
-                selected_slice = image_data[:, :, image_data.shape[2]//2,:]
-        elif desired_orientation == "TRA":
-            if orientation == "SAG":
-                selected_slice = image_data[:, image_data.shape[1]//2, :,:]
-            elif orientation == "TRA":
-                selected_slice = image_data[:, :, image_data.shape[2]//2,:]
-            else:
-                selected_slice = image_data[:, image_data.shape[1]//2, :,:]
-        elif desired_orientation == "SAG":
-            if orientation == "SAG":
-                selected_slice = image_data[:, :, image_data.shape[2]//2,:]
-            elif orientation == "TRA":
-                selected_slice = image_data[image_data.shape[0]//2, :, :,:]
-            else:
-                selected_slice = image_data[image_data.shape[0]//2, :, :,:]
-    if orientation != desired_orientation:
-        selected_slice = correct_aspect(selected_slice, pixel_spacing, slice_thickness, desired_aspect='COR')
-    #### missing resize
-    pil_img = Image.fromarray(selected_slice.astype(np.uint8), mode='RGB')
-    if orientation == "COR":
-        pil_img = pil_img.rotate(180)
-    pil_img_resized = pil_img.resize(target_size, Image.ANTIALIAS)
-    return pil_img_resized, selected_slice
-
-def dicom_to_png_by_orientation_single(dicom_folder,desired_orientation="COR",target_size = (224, 224),plot=False):
-    """
-    Converts DICOM images to PNG by orientation, adjusting the aspect ratio based on pixel spacing and slice thickness.
-
-    :param root_dir: The root directory where DICOM files are located.
-    :param output_dir: The directory where PNG files will be saved.
-    :param desired_orientation: The desired orientation ('COR', 'TRA', 'SAG') for the output image.
-    :param pixel_spacing: The pixel spacing (x, y) from the DICOM metadata.
-    :param slice_thickness: The slice thickness from the DICOM metadata.
-    """
-
-   
-    nii_d = glob.glob(dicom_folder + '.nii.gz')
-    dcm_file = glob.glob(dicom_folder + '/*.dcm')[0]
-    ds = pydicom.read_file(dcm_file)
-    rgb = False
-
-    pil_img  = None
-    orientation = dicom_folder.split("/")[-4]
-    modality = dicom_folder.split("/")[-2]
-    ds = pydicom.read_file(glob.glob(dicom_folder+'/*.dcm')[0])
-    # patient_position = getattr(ds, 'PatientPosition', "HFS")
-    # print(patient_position)
-    # Adjust for additional orientations like '3DCOR', '3DSAG', etc.
-    if '3D' in orientation or 'NA' in orientation:
-        orientation = "TRA"
-    elif 'SAG' in orientation:
-        orientation = 'SAG'
-    elif 'COR' in orientation:
-        orientation = 'COR'
-    elif 'TRA' in orientation:
-        orientation = 'TRA'       
-    # if patient_position != "HFS" and desired_orientation == "TRA" and orientation == "SAG":
-    #     orientation_overwrite = True
-    #     orientation = "TRA"
-    try:
-        img = nib.load(nii_d[0])
-        image_data = img.get_fdata()
-        if len(image_data.shape)>3:
-            image_data = image_data[:,:,:,-1]
-    except:
-        if is_rgb(nii_d[0])[0]:
-            rgb = True
-            pil_img,resized_slice = get_rgb_image(nii_d[0],orientation, desired_orientation,target_size)
-           
-
-    if not pil_img:
-        pixel_spacing,slice_thickness =  get_pixel_spacing_and_slice_thickness_from_nifti(nii_d[0])
-    
-        if pixel_spacing is None or len(pixel_spacing) == 0 or slice_thickness is None:
-            
-            pixel_spacing,slice_thickness =  get_pixel_spacing_and_slice_thickness(ds)
-      
-        nifty_or = get_nifti_orientation(nii_d[0])
-
-        selected_slice = get_slice(nii_d[0],image_data, nifty_or, orientation, desired_orientation)
-        if "CT" not in modality and "PT" not in modality:
-            selected_slice[selected_slice<0] = 0
-        # Check if selected_slice is None or not 2D
-        if selected_slice is None or len(selected_slice.shape) != 2:
-            print(f"No valid slice selected for folder: {dicom_folder}")
-            return
-    
-        # Correcting the aspect ratio
-        if orientation != desired_orientation :
-            selected_slice = correct_aspect(selected_slice, pixel_spacing, slice_thickness)
-
-        # Resizing the selected slice to a fixed size (128x128 pixels)
-        try:
-            resized_slice = resize_or_pad_image(selected_slice, target_size,
-                                                get_background_value_from_3d_array(image_data, num_slices=3))
-        except:
-            print("ERROR in resizing"+dicom_folder)
-
-         # Normalizing and saving the image
-        resized_slice = np.interp(resized_slice, (resized_slice.min(), resized_slice.max()), (0, 255))
-        pil_img = Image.fromarray(resized_slice.astype(np.uint8), mode='L')
-    
-        if orientation == "SAG" and desired_orientation == "COR" or orientation == "COR" and desired_orientation == "SAG" :
-            pil_img = Image.fromarray(resized_slice.astype(np.uint8), mode='L').rotate(180)
-        if orientation ==  desired_orientation or orientation == "TRA" and desired_orientation == "COR" or orientation == "TRA" and desired_orientation == "SAG" :
-            pil_img = Image.fromarray(resized_slice.astype(np.uint8), mode='L').rotate(90)
-        if orientation == "COR" and desired_orientation == "TRA" :
-           pil_img = Image.fromarray(resized_slice.astype(np.uint8), mode='L').rotate(-90)
-        if orientation == "SAG" and desired_orientation == "COR" and nifty_or == "LPI" :
-            pil_img = Image.fromarray(resized_slice.astype(np.uint8), mode='L').rotate(90)    
-        if modality == "PT":
-       
-        # Apply the jet colormap
-            colormap_image = cm.jet(resized_slice / 255)  # Normalize the image to range [0, 1]
-            colormap_image = np.uint8(colormap_image * 255)  # Convert to 8-bit format
-            pil_img = Image.fromarray(colormap_image, mode='RGBA')
-    
-    if plot: 
-        plt.imshow(pil_img, cmap='gray')  # 'gray' colormap for grayscale
-        plt.axis('off')  # Hide the axes
-        plt.show()
-    return pil_img
-
 def check_for_rotation(nifti_path):
     """
     Check if the NIfTI image contains rotation by examining its affine matrix.
@@ -1225,6 +1257,8 @@ def check_for_rotation(nifti_path):
         return False
 
     return has_rotation, rotation_info
+
+
 def get_nifti_orientation(nifti_path):
     # Load the NIFTI file
     # if check_for_rotation(nifti_path):
@@ -1257,52 +1291,8 @@ def get_nifti_orientation(nifti_path):
     # Join the orientation labels to form a string that represents the orientation
     orientation_str = ''.join(orientations)
 
-    # Interpret the orientation based on the anatomical labels
-    # The orientation string now directly maps to the voxel orientation in the file,
-    # taking into account the provided FSLeyes orientation information.
-    # This interpretation could be adjusted based on specific needs or conventions.
-    
-    # Here, instead of determining neurological vs. radiological, we return the orientation string directly,
-    # as the original orientation determination might not fully apply with the detailed FSLeyes info.
     return orientation_str 
 
-# def get_nifti_orientation(nifti_path):
-#     # Load the NIFTI file
-#     image = nib.load(nifti_path)
-#     affine = image.affine
-
-#     # Extract the rotation part of the affine matrix (3x3 upper-left submatrix)
-#     rotation = affine[:3, :3]
-
-#     # Determine the direction of each voxel axis in RAS space
-#     # by finding the column with the largest absolute value for each row
-#     axis_directions = np.argmax(np.abs(rotation), axis=1)
-
-#     # Map the axis directions to anatomical labels
-#     labels = ['R', 'A', 'S']  # Right, Anterior, Superior directions for positive axis increments
-#     orientations = []
-
-#     for i, axis in enumerate(axis_directions):
-#         # Check the sign of the direction vector component to determine if it's positive or negative
-#         # and append the corresponding label with + or - to indicate the direction
-#         sign = np.sign(rotation[i, axis])
-#         if axis == 0:  # x-axis
-#             orientations.append(('R' if sign > 0 else 'L'))
-#         elif axis == 1:  # y-axis
-#             orientations.append(('A' if sign > 0 else 'P'))
-#         else:  # z-axis
-#             orientations.append(('S' if sign > 0 else 'I'))
-
-#     # Join the orientation labels to form a string that represents the orientation
-#     orientation_str = ''.join(orientations)
-
-#     # Determine if the orientation is 'neurological' (RAS) or 'radiological' (LAS) based on the x-axis direction
-#     # In the context of this function, we simplify the definition:
-#     # 'neurological' if the x-axis is towards the Right (first letter is 'R'), 
-#     # and 'radiological' if towards the Left (first letter is 'L')
-#     orientation = 'neurological' if orientation_str.startswith('R') else 'radiological'
-
-#     return orientation
     
 def numeric_sort_key(filepath):
     base_name = os.path.basename(filepath)
@@ -1310,9 +1300,6 @@ def numeric_sort_key(filepath):
     numeric_part = parts[0] + '.' + parts[1] if len(parts) > 1 else parts[0]
     return float(numeric_part)
 
-
-
-    
 
 
 def order_dicom_files(dicom_folder_or_files):
