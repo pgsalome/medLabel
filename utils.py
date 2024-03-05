@@ -621,7 +621,6 @@ def get_view_order(nifti_image_path):
     
     # No need to sort based on dimensions since we are focusing on orientation order and voxel sizes for logic
     return dim_info
-
 def get_slice(nifti_path,image_data, nifty_or, orientation, desired_orientation):
     selected_slice = None
     rgb = image_data.ndim == 4
@@ -633,6 +632,7 @@ def get_slice(nifti_path,image_data, nifty_or, orientation, desired_orientation)
     # rot = check_for_rotation(nifti_path)
     # if rot:
     #     print("rotation")
+    ##### fixed for all 3 directions ######
     if nifty_or == "LPI":
         if desired_orientation == "COR":
             if orientation == "SAG":
@@ -642,8 +642,9 @@ def get_slice(nifti_path,image_data, nifty_or, orientation, desired_orientation)
                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
                 ind = 1
             else:
-                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
-                ind = 2
+                selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                ind = 0
+
         elif desired_orientation == "TRA":
             if orientation == "SAG":
                 selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
@@ -652,8 +653,9 @@ def get_slice(nifti_path,image_data, nifty_or, orientation, desired_orientation)
                 selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
                 ind = 2
             else:
-                selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
-                ind = 1
+                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                ind = 2
+
         elif desired_orientation == "SAG":
             if orientation == "SAG":
                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
@@ -662,8 +664,9 @@ def get_slice(nifti_path,image_data, nifty_or, orientation, desired_orientation)
                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
                 ind = 0
             else:
-                selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
-                ind = 0
+                selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                ind = 1
+    ##### fixed for all 3 directions ######
     elif nifty_or == "LAI" :
         if desired_orientation == "COR":
             if orientation == "SAG":
@@ -715,7 +718,6 @@ def get_slice(nifti_path,image_data, nifty_or, orientation, desired_orientation)
                 ind = 2
             else:
                 selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
-                ind = 2
         elif desired_orientation == "SAG":
             if orientation == "SAG":
                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
@@ -726,12 +728,12 @@ def get_slice(nifti_path,image_data, nifty_or, orientation, desired_orientation)
             else:
                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
                 ind = 0
-                
+    # fixed for TRA and COR            
     elif nifty_or == "RAI":
          if desired_orientation == "COR":
              if orientation == "SAG":
-                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2,: ])
-                 ind = 1
+                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                 ind = 0
              elif orientation == "TRA":
                  selected_slice = select_slice(image_data[ :,image_data.shape[1]//2, :])
                  ind = 1
@@ -740,8 +742,8 @@ def get_slice(nifti_path,image_data, nifty_or, orientation, desired_orientation)
                  ind = 2
          elif desired_orientation == "TRA":
              if orientation == "SAG":
-                 selected_slice =select_slice( image_data[:, :, image_data.shape[2]//2])
-                 ind = 2
+                 selected_slice = select_slice(image_data[ :,image_data.shape[1]//2, :])
+                 ind = 1
              elif orientation == "TRA":
                  selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
                  ind = 2
@@ -750,8 +752,8 @@ def get_slice(nifti_path,image_data, nifty_or, orientation, desired_orientation)
                  ind = 1
          elif desired_orientation == "SAG":
              if orientation == "SAG":
-                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
-                 ind = 0
+                 selected_slice =select_slice( image_data[:, :, image_data.shape[2]//2])
+                 ind = 2
              elif orientation == "TRA":
                  selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
                  ind = 0
@@ -820,43 +822,45 @@ def get_slice(nifti_path,image_data, nifty_or, orientation, desired_orientation)
              else:
                  selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
                  ind = 0
+    ##### fixed for all COR and SAG ######
     elif nifty_or == "LAS":
         
         if desired_orientation == "COR":
             if orientation == "SAG":
-                selected_slice = select_slice(image_data[:, image_data.shape[1]//2,: ])
-                ind = 1
+                selected_slice = select_slice(image_data[image_data.shape[0]//2, :,: ])
+                ind = 0
             elif orientation == "TRA":
-                selected_slice = select_slice(image_data[ :,image_data.shape[1]//2, :])
-                ind = 1
+                selected_slice = select_slice(image_data[image_data.shape[0]//2, :,: ])
+                ind = 0
             else:
                 selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
                 ind = 2
         elif desired_orientation == "TRA":
             if orientation == "SAG":
-                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
-                ind = 2
+                selected_slice = select_slice(image_data[:,  image_data.shape[1]//2,:])
+                ind = 1
             elif orientation == "TRA":
-                selected_slice =select_slice( image_data[:, :, image_data.shape[2]//2])
-                ind = 2
+                selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                ind = 1
             else:
                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
                 ind = 1
         elif desired_orientation == "SAG":
             if orientation == "SAG":
-                selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
-                ind = 0
+                selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                ind = 2
             elif orientation == "TRA":
-                selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
-                ind = 1
+                selected_slice = select_slice( image_data[:, :, image_data.shape[2]//2])
+                ind = 2
             else:
                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
                 ind = 0
-    else:
+    ##### fixed for all TRA and SAG ######
+    elif nifty_or == "LPS" :
          if desired_orientation == "COR":
              if orientation == "SAG":
-                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2,: ])
-                 ind = 1
+                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                 ind = 0
              elif orientation == "TRA":
                  selected_slice = select_slice(image_data[ :,image_data.shape[1]//2, :])
                  ind = 1
@@ -865,8 +869,8 @@ def get_slice(nifti_path,image_data, nifty_or, orientation, desired_orientation)
                  ind = 2
          elif desired_orientation == "TRA":
              if orientation == "SAG":
-                 selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
-                 ind = 2
+                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2,: ])
+                 ind = 1
              elif orientation == "TRA":
                  selected_slice =select_slice( image_data[:, :, image_data.shape[2]//2])
                  ind = 2
@@ -875,15 +879,45 @@ def get_slice(nifti_path,image_data, nifty_or, orientation, desired_orientation)
                  ind = 1
          elif desired_orientation == "SAG":
              if orientation == "SAG":
+                 selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                 ind = 2
+             elif orientation == "TRA":
                  selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
                  ind = 0
-             elif orientation == "TRA":
-                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
-                 ind = 1
              else:
                  selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
                  ind = 0
-                 
+    else :
+         if desired_orientation == "COR":
+             if orientation == "SAG":
+                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                 ind = 0
+             elif orientation == "TRA":
+                 selected_slice = select_slice(image_data[ :,image_data.shape[1]//2, :])
+                 ind = 1
+             else:
+                 selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                 ind = 2
+         elif desired_orientation == "TRA":
+             if orientation == "SAG":
+                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2,: ])
+                 ind = 1
+             elif orientation == "TRA":
+                 selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                 ind = 2
+             else:
+                 selected_slice = select_slice(image_data[:, image_data.shape[1]//2, :])
+                 ind = 1
+         elif desired_orientation == "SAG":
+             if orientation == "SAG":
+                 selected_slice = select_slice(image_data[:, :, image_data.shape[2]//2])
+                 ind = 2
+             elif orientation == "TRA":
+                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                 ind = 0
+             else:
+                 selected_slice = select_slice(image_data[image_data.shape[0]//2, :, :])
+                 ind = 0
 
         
     return selected_slice, ind
